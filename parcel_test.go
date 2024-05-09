@@ -50,7 +50,8 @@ func TestAddGetDelete(t *testing.T) {
 	parcel.Number, err = store.Add(parcel)
 
 	require.NoError(t, err)
-	require.NotEmpty(t, parcel.Number)
+	// require.NotEmpty(t, parcel.Number)
+	require.Greater(t, parcel.Number, 0)
 	// get
 	// получите только что добавленную посылку, убедитесь в отсутствии ошибки
 	// проверьте, что значения всех полей в полученном объекте совпадают со значениями полей в переменной parcel
@@ -65,7 +66,7 @@ func TestAddGetDelete(t *testing.T) {
 	require.NoError(t, err)
 
 	_, err = store.Get(parcel.Number)
-	require.Equal(t, sql.ErrNoRows, err)
+	require.ErrorIs(t, sql.ErrNoRows, err)
 }
 
 // TestSetAddress проверяет обновление адреса
@@ -178,10 +179,11 @@ func TestGetByClient(t *testing.T) {
 	require.Equal(t, len(storedParcels), len(parcels))
 
 	// check
-	for _, parcel := range storedParcels {
-		// в parcelMap лежат добавленные посылки, ключ - идентификатор посылки, значение - сама посылка
-		// убедитесь, что все посылки из storedParcels есть в parcelMap
-		// убедитесь, что значения полей полученных посылок заполнены верно
-		assert.Equal(t, parcel, parcelMap[parcel.Number])
-	}
+	// for _, parcel := range storedParcels {
+	// 	// в parcelMap лежат добавленные посылки, ключ - идентификатор посылки, значение - сама посылка
+	// 	// убедитесь, что все посылки из storedParcels есть в parcelMap
+	// 	// убедитесь, что значения полей полученных посылок заполнены верно
+	// 	assert.Equal(t, parcel, parcelMap[parcel.Number])
+	// // require.ElementsMatch(t, storedParcels, service.parcels)
+	require.ElementsMatch(t, parcels, storedParcels)
 }
